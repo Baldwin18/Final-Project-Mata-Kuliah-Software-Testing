@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS barang (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     kode       VARCHAR(50)  UNIQUE,
-    nama       VARCHAR(100) NOT NULL,
+    nama       VARCHAR(100) NOT NULL UNIQUE,
     satuan     VARCHAR(20),
     harga      DECIMAL(15,2) DEFAULT 0,
     stok       INT           DEFAULT 0,

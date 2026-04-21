@@ -18,14 +18,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['_action'] ?? '') === 'tamb
     if (!$nama) {
         $error = 'Nama barang tidak boleh kosong.';
     } else {
-        $stmt = $db->prepare('INSERT INTO barang (kode, nama, satuan, harga, stok) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('sssdi', $kode, $nama, $satuan, $harga, $stok);
-        if ($stmt->execute()) {
-            $success = "Barang <b>$nama</b> berhasil ditambahkan.";
+        // Cek duplikat nama (case-insensitive)
+        $cek = $db->prepare('SELECT id FROM barang WHERE LOWER(nama) = LOWER(?)');
+        $cek->bind_param('s', $nama);
+        $cek->execute();
+        $cek->store_result();
+        $sudah_ada = $cek->num_rows > 0;
+        $cek->close();
+
+        if ($sudah_ada) {
+            $error = "Barang <b>" . htmlspecialchars($nama) . "</b> sudah ada di daftar. Gunakan fitur transaksi untuk menambah stok.";
         } else {
-            $error = 'Gagal menyimpan. Kode barang mungkin sudah digunakan.';
+            $stmt = $db->prepare('INSERT INTO barang (kode, nama, satuan, harga, stok) VALUES (?, ?, ?, ?, ?)');
+            $stmt->bind_param('sssdi', $kode, $nama, $satuan, $harga, $stok);
+            if ($stmt->execute()) {
+                $success = "Barang <b>" . htmlspecialchars($nama) . "</b> berhasil ditambahkan.";
+            } else {
+                $error = 'Gagal menyimpan. Kode barang mungkin sudah digunakan.';
+            }
+            $stmt->close();
         }
-        $stmt->close();
     }
 }
 
