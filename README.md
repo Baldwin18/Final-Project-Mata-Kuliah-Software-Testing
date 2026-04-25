@@ -1,7 +1,7 @@
 # Sistem Manajemen Gudang
 
-![CI](https://github.com/<USERNAME>/<REPO>/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/<USERNAME>/<REPO>/branch/main/graph/badge.svg)](https://codecov.io/gh/<USERNAME>/<REPO>)
+![CI](https://github.com/Baldwin18/Final-Project-Mata-Kuliah-Software-Testing/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/Baldwin18/Final-Project-Mata-Kuliah-Software-Testing/branch/main/graph/badge.svg)](https://codecov.io/gh/Baldwin18/Final-Project-Mata-Kuliah-Software-Testing)
 
 Aplikasi web berbasis PHP untuk mengelola data barang, transaksi stok masuk/keluar, dan laporan inventori gudang. Dibangun sebagai Final Project Mata Kuliah Software Testing.
 
@@ -71,8 +71,8 @@ Sistem Manajemen Gudang adalah aplikasi CRUD sederhana dengan fitur:
 
 **1. Clone repository**
 ```bash
-git clone https://github.com/<USERNAME>/<REPO>.git
-cd <REPO>
+git clone https://github.com/Baldwin18/Final-Project-Mata-Kuliah-Software-Testing.git
+cd Final-Project-Mata-Kuliah-Software-Testing
 ```
 
 **2. Import database**
@@ -194,9 +194,3 @@ push / pull_request
 ```
 
 Laporan coverage tersedia sebagai **artifact** di tab Actions setiap kali pipeline selesai.
-
----
-
-## Catatan
-
-Ganti `<USERNAME>/<REPO>` di badge atas dengan username dan nama repository GitHub kamu.
