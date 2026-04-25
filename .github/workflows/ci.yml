@@ -1,0 +1,76 @@
+name: CI - Sistem Manajemen Gudang
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} - Tests & Coverage
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ["8.2"]
+
+    steps:
+      # 1. Checkout kode
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup PHP dengan Xdebug untuk coverage
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo, pdo_sqlite, sqlite3
+          coverage: xdebug
+
+      # 3. Validasi composer.json
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      # 4. Cache Composer dependencies
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      # 5. Install dependencies
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      # 6. Build / lint check (pastikan tidak ada syntax error)
+      - name: Lint PHP files
+        run: find gudang/src tests -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"  || true
+
+      # 7. Jalankan semua test
+      - name: Run test suite
+        run: vendor/bin/phpunit --testdox
+
+      # 8. Generate laporan coverage
+      - name: Generate coverage report
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+
+      # 9. Upload coverage report sebagai artifact
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.xml
+            coverage-report/
+          retention-days: 7
+
+      # 10. Upload ke Codecov (opsional, untuk badge coverage)
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+          fail_ci_if_error: false
+        continue-on-error: true

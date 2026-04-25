@@ -1,7 +1,6 @@
-__pycache__/
-*.pyc
-*.pyo
+vendor/
+composer.lock
+coverage-report/
+coverage.xml
 *.db
-venv/
 .env
-instance/
